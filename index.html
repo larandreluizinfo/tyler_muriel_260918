@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sombra Caçadora — Terror na Casa</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;700&family=Press+Start+2P&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:radial-gradient(1200px 700px at 50% -10%, #1a1030 0%, #07060d 55%, #000 100%); color:#eee; font-family:'Inter','Segoe UI',Arial,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:14px; }
   h1 { font-family:'Creepster',cursive; font-size:38px; letter-spacing:3px; color:#f3ecff; text-shadow:0 0 12px #8a4bff, 0 0 34px #8a4bff, 0 0 60px #ff0000, 2px 3px 0 #000; animation:flick 3.2s infinite; }
@@ -21,13 +21,30 @@
   button { margin-top:10px; padding:11px 30px; font-size:16px; font-weight:bold; background:linear-gradient(180deg,#7a3cff,#3a1490 60%,#1c0a4a); color:white; border:1px solid #9a7bff; border-radius:12px; cursor:pointer; letter-spacing:.5px; box-shadow:0 0 24px rgba(122,60,255,.5); }
   button:hover { filter:brightness(1.2); }
   #wrap{position:relative;}
-  #shop{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,1,8,.88);border-radius:14px;z-index:5;}
-  #shopCard{background:linear-gradient(180deg,#1d1430,#0d0918);border:2px solid #8a6aff;border-radius:16px;padding:26px 30px;text-align:center;max-width:520px;box-shadow:0 0 60px rgba(130,70,255,.5);}
-  #shopCard h2{font-family:'Creepster',cursive;font-size:34px;letter-spacing:2px;color:#ffe9a0;text-shadow:0 0 18px #8a4bff;}
-  #shopItem{font-size:64px;margin:8px 0;}
-  #shopName{font-size:22px;font-weight:bold;color:#fff;}
-  #shopDesc{font-size:14px;color:#c9c2de;margin:8px 0 12px;line-height:1.5;}
-  #shopPrice{font-size:18px;color:#ffd75c;font-weight:bold;margin-bottom:14px;}
+  /* ===== LOJA ESTILO BATALHA DE UNDERTALE ===== */
+  #shop{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#000;border-radius:14px;z-index:5;}
+  #shopCard{background:#000;border:4px solid #fff;border-radius:6px;padding:20px 22px;text-align:left;width:640px;max-width:92%;box-shadow:none;font-family:'Press Start 2P',monospace;}
+  #shopCard h2{font-family:'Press Start 2P',monospace;font-size:15px;letter-spacing:1px;color:#fff;text-shadow:none;margin-bottom:12px;text-align:center;}
+  #shopCard h2 .ut-hp{color:#ffff00;}
+  .ut-box{border:3px solid #fff;border-radius:4px;padding:14px 16px;margin:10px 0;min-height:86px;}
+  .ut-flavor{color:#fff;font-size:11px;line-height:2;}
+  .ut-flavor::before{content:'* ';color:#fff;}
+  .ut-gold{color:#ffff00;font-size:10px;margin-top:10px;}
+  .ut-row{display:flex;align-items:center;gap:10px;padding:9px 8px;border:2px solid transparent;cursor:pointer;color:#fff;font-size:10px;line-height:1.7;}
+  .ut-row:hover,.ut-row:focus{border-color:#fff;background:#111;color:#ffff00;}
+  .ut-row:hover .ut-heart,.ut-row:focus .ut-heart{visibility:visible;}
+  .ut-heart{visibility:hidden;color:#ff0000;font-size:12px;width:16px;}
+  .ut-desc{color:#808080;font-size:8px;display:block;margin-top:4px;line-height:1.8;}
+  .ut-row:hover .ut-desc{color:#c0c0c0;}
+  .ut-price{margin-left:auto;color:#ffff00;white-space:nowrap;font-size:10px;}
+  .ut-owned{color:#00ff00;font-size:9px;}
+  .ut-btns{display:flex;gap:14px;justify-content:center;margin-top:14px;}
+  .ut-btns button{margin:0;padding:12px 20px;font-size:11px;font-family:'Press Start 2P',monospace;background:#000;color:#ff7f27;border:3px solid #ff7f27;border-radius:6px;cursor:pointer;box-shadow:none;}
+  .ut-btns button:hover{background:#ff7f27;color:#000;}
+  .ut-btns button:disabled{opacity:.35;cursor:default;}
+  .ut-btns button:disabled:hover{background:#000;color:#ff7f27;}
+  .ut-soul{color:#ff0000;}
+  #shopItem,#shopName,#shopDesc,#shopPrice{display:none;}
   .shopBtns{display:flex;gap:12px;justify-content:center;}
   .shopBtns button{margin:0;padding:12px 24px;font-size:15px;}
   #buyBtn{background:linear-gradient(180deg,#2ecc71,#0d6b33);border-color:#7dffab;}
@@ -98,8 +115,10 @@ function tryEnterDoor(){if(state!=='playing')return;const girlWorld=cameraX+GIRL
   const games=['breath','heart','hold','moths'];
   const g=games[Math.floor(Math.random()*games.length)];
   const tea=hasTea;if(tea){hasTea=false;updateCoins();}
-  hide={game:g,hits:0,need:5,lung:0,dir:1,time:0,limit:tea?21:16,door:bd,cutT:0,cutType:'girl',
-    heart:0,heartSpeed:tea?1.0:1.35,doorHP:62,noise:8,moths:[],mothId:0,mothSpawn:0,tea:tea};
+  const lim=g==='heart'?(tea?24:19):g==='moths'?(tea?23:18):g==='hold'?22:(tea?21:16);
+  hide={game:g,hits:0,need:5,lung:0,dir:1,time:0,limit:lim,door:bd,cutT:0,cutType:'girl',
+    heart:0,heartSpeed:tea?0.85:1.0,zoneLo:tea?26:32,zoneHi:tea?70:62,doorHP:62,noise:8,moths:[],mothId:0,mothSpawn:0,tea:tea,
+    eyeT:2.6,watching:false};
   if(tea)showMsg('🍵 Chá calmante fez efeito! Este esconderijo está mais fácil!','#9fffcf');
   if(g==='breath')showMsg('🤫 RESPIRAÇÃO! ESPAÇO com pulmão CHEIO (verde), 5x!','#7cff9a');
   else if(g==='heart')showMsg('💓 CORAÇÃO! ESPAÇO quando o anel entrar no círculo verde, 5x!','#ff9db0');
@@ -125,12 +144,12 @@ function hidePress(){
 function heartPress(){
   if(state!=='hiding'||!hide||hide.cutT>0)return;
   const r=hide.heartR;
-  const lo=hide.tea?30:36,hi=hide.tea?62:54;
+  const lo=hide.zoneLo,hi=hide.zoneHi;
   if(r>=lo&&r<=hi){
     hide.hits++;flash=0.45;beep(700+hide.hits*130,0.12,'sine',0.1);
-    showMsg(`💓 ${hide.hits}/5 no ritmo!`,'#ff9db0');
+    showMsg(`💓 ${hide.hits}/${hide.need} no ritmo!`,'#ff9db0');
     hide.cutT=1.0;hide.cutType=(hide.hits%2===1)?'girl':'beast';
-    hide.heartSpeed+=0.14;
+    hide.heartSpeed+=0.07;
     for(let i=0;i<14;i++)particles.push({x:W/2+(Math.random()-0.5)*220,y:H/2-100+(Math.random()-0.5)*120,vx:(Math.random()-0.5)*140,vy:-Math.random()*140,life:0.6,c:'#ff9db0'});
     if(hide.hits>=hide.need)winHide();
   }else startJumpscare(`O coração disparou! (anel em ${Math.floor(r)} — precisava ${lo}–${hi})`);
@@ -143,16 +162,15 @@ function holdPress(){
 }
 function mothClick(px,py){
   if(state!=='hiding'||!hide||hide.game!=='moths')return;
-  const t=performance.now()/1000;
-  const passY=H/2+Math.sin(t*0.9)*130;
-  const watching=Math.abs(passY-H/2)<60;
+  // fonte única da verdade: hide.watching (atualizado no update + desenhado igual)
+  const watching=!!hide.watching;
   for(let i=hide.moths.length-1;i>=0;i--){
     const m=hide.moths[i];
-    if(Math.hypot(px-m.x,py-m.y)<26){
+    if(Math.hypot(px-m.x,py-m.y)<28){
       if(watching){startJumpscare('Ele viu sua mão pela fresta quando você pegou a mariposa!');return;}
       hide.moths.splice(i,1);hide.hits++;
       beep(800+hide.hits*120,0.09,'sine',0.08);flash=0.25;
-      showMsg(`🦋 ${hide.hits}/5 mariposas em silêncio!`,'#c9b8ff');
+      showMsg(`🦋 ${hide.hits}/${hide.need} mariposas em silêncio!`,'#c9b8ff');
       for(let k=0;k<8;k++)particles.push({x:m.x,y:m.y,vx:(Math.random()-0.5)*120,vy:-Math.random()*100,life:0.5,c:'#c9b8ff'});
       if(hide.hits>=hide.need)winHide();
       return;
@@ -181,29 +199,30 @@ function openShop(stall){
 }
 function renderShopDOM(){
   const line=OLD_LINES[Math.floor(Math.random()*OLD_LINES.length)];
-  let html=`<h2>🛒 LOJA DO VELHO</h2>
-  <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin:6px 0 2px;">
-    <div style="font-size:64px;filter:drop-shadow(0 0 12px #8a4bff)">🧙‍♂️</div>
-    <div style="background:#241b3d;border:1px solid #6a5aac;border-radius:12px;padding:10px 14px;font-size:13px;color:#e8e2ff;max-width:330px;text-align:left">“${line}”<br><span style="color:#ffd75c">— Velho Tobias</span></div>
-  </div>
-  <div style="color:#ffd75c;font-weight:bold;margin:6px 0">💰 Suas moedas: ${Math.floor(money)}</div>
-  <div style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto;">`;
+  // fala do velho em caixinha de diálogo estilo Undertale
+  let html=`<h2>🧙 TOBIAS <span class="ut-hp">LV 99</span> <span class="ut-soul">♥</span></h2>
+  <div class="ut-box"><div class="ut-flavor" id="utTalk">${line}</div>
+  <div class="ut-gold">* GOLD : ${Math.floor(money)} G</div></div>
+  <div class="ut-box">`;
   for(const it of ITEMS){
     let owned='';
-    if(it.id==='sword'&&hasSword)owned=' ✅ (já tem)';
-    if(it.id==='cross'&&hasCross)owned=' ✅ (já tem)';
+    if(it.id==='sword'&&hasSword)owned=' <span class="ut-owned">[JA TEM]</span>';
+    if(it.id==='cross'&&hasCross)owned=' <span class="ut-owned">[JA TEM]</span>';
     const can=money>=it.price&&!owned;
-    html+=`<div style="display:flex;gap:10px;align-items:center;background:#161022;border:1px solid #4a3a6a;border-radius:10px;padding:8px 10px;text-align:left;">
-      <div style="font-size:34px">${it.icon}</div>
-      <div style="flex:1"><b style="color:#fff">${it.name}${owned}</b><br><span style="font-size:12px;color:#b9b2cc">${it.desc}</span><br><span style="color:#ffd75c;font-weight:bold">💰 ${it.price}</span></div>
-      <button data-buy="${it.id}" ${(!can)?'disabled style="opacity:.4;padding:10px 14px;font-size:13px"':'style="padding:10px 14px;font-size:13px"'}>${owned?'OK':'Comprar'}</button>
-    </div>`;
+    html+=`<div class="ut-row" data-buy="${it.id}" tabindex="0"><span class="ut-heart">♥</span><span>${it.icon} ${it.name}${owned}<span class="ut-desc">* ${it.desc}</span></span><span class="ut-price">${it.price} G</span></div>`;
   }
-  html+=`</div><div class="shopBtns" style="margin-top:12px"><button id="skipBtn2">Fechar (Enter)</button></div>`;
+  html+=`</div><div class="ut-btns"><button id="skipBtn2">* MERCY : SAIR</button></div>`;
   document.getElementById('shopCard').innerHTML=html;
-  document.querySelectorAll('[data-buy]').forEach(b=>b.addEventListener('click',()=>buyItem(b.getAttribute('data-buy'))));
+  document.querySelectorAll('[data-buy]').forEach(b=>{
+    const buy=()=>buyItem(b.getAttribute('data-buy'));
+    b.addEventListener('click',buy);
+    b.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();buy();}});
+  });
   document.getElementById('skipBtn2').addEventListener('click',closeShop);
+  utBlip();
 }
+// som de "blip" de texto estilo Undertale
+function utBlip(){try{const ac=beep.ctx||(beep.ctx=new(window.AudioContext||window.webkitAudioContext)());for(let i=0;i<7;i++){const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=520;g.gain.value=0.04;o.connect(g);g.connect(ac.destination);const t0=ac.currentTime+i*0.05;o.start(t0);o.stop(t0+0.04);}}catch(e){}}
 function buyItem(id){
   if(state!=='shop')return;
   const it=ITEMS.find(i=>i.id===id);if(!it)return;
@@ -639,14 +658,35 @@ function drawFirstPerson(t){
   // olho pela fresta
   ctx.save();ctx.beginPath();ctx.rect(W/2-6,40,12,H-80);ctx.clip();
   ctx.fillStyle='#151020';ctx.fillRect(W/2-6,40,12,H-80);
-  const passY=H/2+Math.sin(t*0.9)*130;
+  const isMoths=hide&&hide.game==='moths';
+  const passY=isMoths?H/2:H/2+Math.sin(t*0.9)*130;
   ctx.fillStyle='rgba(0,0,0,.93)';ctx.fillRect(W/2-6,passY-58,12,116);
+  if(isMoths){
+    // MARIPOSAS: olho DETERMINÍSTICO — ABERTO no meio (PERIGO!) / FECHADO (seguro, fresta escura)
+    if(hide.watching){
+      ctx.fillStyle='#f4efe2';ctx.shadowColor='#fff';ctx.shadowBlur=22;
+      ctx.beginPath();ctx.ellipse(W/2,H/2,6.5,13,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      ctx.fillStyle='#000';ctx.beginPath();ctx.arc(W/2,H/2+1,2.8,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(255,60,60,.9)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(W/2,H/2-13);ctx.lineTo(W/2,H/2+13);ctx.stroke();
+    } else {
+      // olho fechado: só escuridão + pálpebra
+      ctx.fillStyle='rgba(0,0,0,.97)';ctx.fillRect(W/2-6,H/2-30,12,60);
+      ctx.strokeStyle='rgba(120,90,90,.5)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(W/2-5,H/2);ctx.lineTo(W/2+5,H/2);ctx.stroke();
+    }
+  } else {
   const eyeY=passY+Math.sin(t*2.2)*10,eyeOpen=0.6+0.4*Math.sin(t*1.3);
   if(eyeOpen>0.15){ctx.fillStyle='#f4efe2';ctx.shadowColor='#fff';ctx.shadowBlur=18;ctx.beginPath();ctx.ellipse(W/2,eyeY,5.6,9*eyeOpen+3.2,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='rgba(190,0,0,.8)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W/2,eyeY-8);ctx.lineTo(W/2,eyeY+8);ctx.stroke();ctx.fillStyle='#000';ctx.beginPath();ctx.arc(W/2,eyeY+1,2.3,0,Math.PI*2);ctx.fill();}
   const mouthPass=Math.sin(t*0.55);
   if(mouthPass>0.86){ctx.fillStyle='#eee';ctx.fillRect(W/2-4,eyeY+30,8,26);ctx.fillStyle='#000';ctx.fillRect(W/2-4,eyeY+38,8,2);ctx.fillRect(W/2-4,eyeY+46,8,2);}
+  }
   ctx.restore();
-  if(Math.abs(passY-H/2)<60){ctx.textAlign='center';ctx.fillStyle='#ff9090';ctx.font='bold 15px Arial';ctx.fillText('👁 ELE ESTÁ OLHANDO PELA FRESTA… NÃO RESPIRE!',W/2,24);}
+  if(isMoths){
+    if(hide.watching){ctx.textAlign='center';ctx.fillStyle='#ff5555';ctx.font='bold 17px Arial';ctx.fillText('👁 OLHO ABERTO! NÃO CLIQUE!',W/2,24);}
+    else{const left=4.4-(hide.eyeT%4.4);ctx.textAlign='center';ctx.fillStyle='#7dffab';ctx.font='bold 15px Arial';ctx.fillText(`✅ OLHO FECHADO — CLIQUE! (${left.toFixed(1)}s)`,W/2,24);}
+  }
+  else if(Math.abs(passY-H/2)<60){ctx.textAlign='center';ctx.fillStyle='#ff9090';ctx.font='bold 15px Arial';ctx.fillText('👁 ELE ESTÁ OLHANDO PELA FRESTA… NÃO RESPIRE!',W/2,24);}
   // mãos tremendo segurando
   const tr=Math.sin(t*28)*1.6;
   ctx.fillStyle='#eebd92';
@@ -743,18 +783,18 @@ function drawHideHUD(t){
     ctx.fillText('Aperte ESPAÇO várias vezes, mas deixe o barulho baixar!',W/2,H-58);
   }
   else{
-    const tt=performance.now()/1000,py=H/2+Math.sin(tt*0.9)*130,watch=Math.abs(py-H/2)<60;
+    const watch=!!hide.watching;
     ctx.fillStyle='#c9b8ff';ctx.font='bold 19px Arial';
     ctx.fillText(`🦋 MARIPOSAS — CLIQUE em ${hide.need}! ${hide.hits}/${hide.need}`,W/2,H-150);
-    ctx.font='bold 14px Arial';ctx.fillStyle=watch?'#ff6666':'#b9b2cc';
-    ctx.fillText(watch?'👁 ELE ESTÁ OLHANDO! NÃO CLIQUE!':`Clique quando ele NÃO estiver olhando • Restam ${Math.max(0,hide.limit-hide.time).toFixed(1)}s`,W/2,H-128);
+    ctx.font='bold 14px Arial';ctx.fillStyle=watch?'#ff6666':'#7dffab';
+    ctx.fillText(watch?'👁 OLHO ABERTO! NÃO CLIQUE!':`✅ Pode clicar! Restam ${Math.max(0,hide.limit-hide.time).toFixed(1)}s`,W/2,H-128);
     ctx.font='13px Arial';ctx.fillStyle='#8f86a8';
     ctx.fillText('ESPAÇO faz barulho — use só o mouse!',W/2,H-58);
   }
 }
 function drawHeartGame(x,y,hide,t){
   const r=hide.heartR||95;
-  const lo=hide.tea?30:36,hi=hide.tea?62:54;
+  const lo=hide.zoneLo,hi=hide.zoneHi;
   const inZone=r>=lo&&r<=hi;
   // alvo verde
   ctx.save();ctx.translate(x,y);
@@ -1026,9 +1066,16 @@ function update(dt){
     }
     else if(hide.game==='moths'){
       hide.mothSpawn-=dt;
-      if(hide.mothSpawn<=0&&hide.moths.length<3&&hide.hits+hide.moths.length<hide.need+1){hide.mothSpawn=0.7;hide.moths.push({id:hide.mothId++,x:160+Math.random()*(W-320),y:120+Math.random()*180,ph:Math.random()*6,sp:0.8+Math.random()*0.8});}
+      if(hide.mothSpawn<=0&&hide.moths.length<3&&hide.hits+hide.moths.length<hide.need+1){hide.mothSpawn=0.55;hide.moths.push({id:hide.mothId++,x:160+Math.random()*(W-320),y:120+Math.random()*180,ph:Math.random()*6,sp:0.8+Math.random()*0.8});}
       const t=performance.now()/1000;
       for(const m of hide.moths){m.ph+=dt*m.sp*3;m.x+=Math.sin(m.ph)*28*dt;m.y+=Math.cos(m.ph*0.7)*20*dt;}
+      // CICLO DE PISCADA DETERMINÍSTICO: olho ABERTO 1.6s (perigo!) / FECHADO 2.8s (seguro)
+      // mesma fonte usada pelo desenho e pelo clique — sem surpresa injusta
+      hide.eyeT+=dt;
+      const cyc=hide.eyeT%4.4;
+      const wasWatching=hide.watching;
+      hide.watching=cyc<1.6;
+      if(hide.watching&&!wasWatching)beep(110,0.18,'sawtooth',0.06); // aviso sonoro: ele abriu o olho!
     }
     if(state==='hiding'&&hide&&hide.time>hide.limit&&hide.game!=='hold')startJumpscare('Você demorou demais e ele ouviu sua respiração!');
     for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;}
